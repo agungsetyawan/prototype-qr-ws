@@ -7,19 +7,20 @@ var mongoose = require('mongoose');
 var socket = require('socket.io');
 var uniqid = require('uniqid');
 var moment = require('moment');
-var qr = require('qr-image');
 moment.locale('id');
-require('dotenv').config();
+var qr = require('qr-image');
 
 var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
 var chatsRouter = require('./routes/chats');
 var testsRouter = require('./routes/tests');
 
 var testModel = require('./models/test_model');
 
 var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var server = app.listen(3000, function() {
+  console.log('listening to requests on port 3000');
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,6 +35,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/users', usersRouter);
 app.use('/chats', chatsRouter);
 app.use('/test', testsRouter);
 
@@ -53,17 +55,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// module.exports = app;
-module.exports = {
-  app: app,
-  server: server
-};
+module.exports = app;
 
 // =============================================================================
-
-// init
-var hostname = process.env.HOSTNAME;
-var timeFormat = process.env.TIME_FORMAT;
 
 // database MongoDB
 var connectionDB = 'mongodb://localhost:27017/mylearning';
@@ -77,52 +71,42 @@ mongoose.connect(connectionDB, function() {
 });
 
 // socket.io
+var io = socket(server);
 io.on('connection', function(socket) {
-  function create() {
-    console.log('+socket:', socket.id, 'connected');
-    // uniqid
-    var uniqueID = uniqid();
-    var time = moment().format(timeFormat);
-    var link = 'http://' + hostname + ':3000/test/' + uniqueID;
-    var svg_string = qr.imageSync(link, {
-      type: 'svg'
-    });
-    var linkData = {
-      uniqid: uniqueID,
-      socket: socket.id,
-      created_at: time,
-      opened_at: '',
-      opened: false,
-      qr: svg_string
-    }
-    // add to database
-    testModel.create(linkData);
+  console.log('+socket:', socket.id, 'connected');
+
+  // uniqid
+  var uniqueID = uniqid();
+  var time = moment().format('YYYY-MM-DD, HH:mm:ss');
+  var link = 'http://localhost:3000/test?id=' + uniqueID;
+  var svg_string = qr.imageSync(link, {
+    type: 'svg'
+  });
+  var linkData = {
+    uniqid: uniqueID,
+    socket: socket.id,
+    created_at: time,
+    opened_at: '',
+    opened: false,
+    qr: svg_string
   }
-  create();
+  testModel.create(linkData);
 
   socket.on('disconnect', function() {
     console.log('-socket:', socket.id, 'disconnected');
-    var query = {
+    testModel.remove({
       socket: socket.id,
       opened: false
-    };
-    //remove from database
-    testModel.remove(query, function(err) {
+    }, function(err) {
       if (err) return handleError(err);
       // removed!
     });
   });
-
   socket.on('chat', function(data) {
     // hanya kirim ke orang lain
     socket.broadcast.emit('chat', data);
 
     //kirim ke diri sendiri juga
     // io.sockets.emit('chat', data);
-  });
-
-  socket.on('qr', function(data) {
-    // create();
-    io.sockets.emit('qr', create);
   });
 });

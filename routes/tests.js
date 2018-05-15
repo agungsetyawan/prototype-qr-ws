@@ -1,20 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-// var socket = require('socket.io-client')('http://localhost:3000');
 var moment = require('moment');
 moment.locale('id');
-require('dotenv').config();
 
 var testModel = require('../models/test_model');
-
-// init
-var redirect = process.env.REDIRECT;
-var timeFormat = process.env.TIME_FORMAT;
+var time = moment().format('YYYY-MM-DD, HH:mm:ss');
+var redirect = 'https://digitalpayment.telkomsel.com/campaign/menangbanyak';
 
 router.get('/:id', function(req, res) {
   var uniqid = req.params.id;
-  var time = moment().format(timeFormat);
   var conditions = {
     uniqid: uniqid,
     opened: false
@@ -32,7 +27,6 @@ router.get('/:id', function(req, res) {
       return res.status(500).send(err);
     } else {
       if (data != null) {
-        // socket.emit('qr', data);
         return res.status(200).redirect(redirect);
         // return res.status(200).send(data);
       } else {
