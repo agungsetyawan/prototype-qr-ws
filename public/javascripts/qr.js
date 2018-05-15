@@ -4,18 +4,17 @@
   socket.on('connect', function() {
     socketID = socket.id;
   });
-  socket.on('qr', getQR);
+  socket.on('qr', function(message) {
+    console.log(message);
+    print(message);
+  })
 
-  $(function() {
-    getQR(socketID);
-  });
-
-  function getQR(socketID) {
-    $("#printQR").html('');
-    $.get("test/qr/"+socketID, function(qr) {
-      qr.forEach(print);
-    });
-  }
+  // function getQR(socketID) {
+  //   $("#printQR").html('');
+  //   $.get("test/qr/" + socketID, function(qr) {
+  //     qr.forEach(print);
+  //   });
+  // }
 
   function print(qrObj) {
     $("#printQR").html(`${qrObj.qr}`);

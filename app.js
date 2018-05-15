@@ -78,8 +78,8 @@ mongoose.connect(connectionDB, function() {
 
 // socket.io
 io.on('connection', function(socket) {
+  console.log('+socket:', socket.id, 'connected');
   function create() {
-    console.log('+socket:', socket.id, 'connected');
     // uniqid
     var uniqueID = uniqid();
     var time = moment().format(timeFormat);
@@ -97,6 +97,7 @@ io.on('connection', function(socket) {
     }
     // add to database
     testModel.create(linkData);
+    return linkData;
   }
   create();
 
@@ -113,16 +114,51 @@ io.on('connection', function(socket) {
     });
   });
 
+  socket.on('qr', function(data) {
+    console.log('/socket:', 'received from', socket.id, 'api');
+    var query = {
+      uniqid: data.uniqid,
+      socket: data.socket,
+      opened: true
+    }
+    testModel.find(query, function(err, data) {
+      if (err) {
+        return handleError(err);
+      } else {
+        if (data != null) {
+          var message = data[0];
+          function recreate() {
+            // uniqid
+            var uniqueID = uniqid();
+            var time = moment().format(timeFormat);
+            var link = 'http://' + hostname + ':3000/test/' + uniqueID;
+            var svg_string = qr.imageSync(link, {
+              type: 'svg'
+            });
+            var linkData = {
+              uniqid: uniqueID,
+              socket: message.socket,
+              created_at: time,
+              opened_at: '',
+              opened: false,
+              qr: svg_string
+            }
+            // add to database
+            testModel.create(linkData);
+            return linkData;
+          }
+          socket.to(message.socket).emit('qr', recreate());
+        }
+      }
+    });
+  });
+  socket.emit('qr', create());
+
   socket.on('chat', function(data) {
     // hanya kirim ke orang lain
     socket.broadcast.emit('chat', data);
 
     //kirim ke diri sendiri juga
     // io.sockets.emit('chat', data);
-  });
-
-  socket.on('qr', function(data) {
-    // create();
-    io.sockets.emit('qr', create);
   });
 });
