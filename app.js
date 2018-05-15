@@ -14,6 +14,7 @@ require('dotenv').config();
 var indexRouter = require('./routes/index');
 var chatsRouter = require('./routes/chats');
 var testsRouter = require('./routes/tests');
+var thanksRouter = require('./routes/thanks');
 
 var testModel = require('./models/test_model');
 
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/chats', chatsRouter);
 app.use('/test', testsRouter);
+app.use('/thanks', thanksRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -115,7 +117,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('qr', function(data) {
-    console.log('/socket:', 'received from', socket.id, 'api');
+    console.log('/socket:', 'received from', socket.id, 'api', data);
     var query = {
       uniqid: data.uniqid,
       socket: data.socket,
@@ -145,6 +147,7 @@ io.on('connection', function(socket) {
             }
             // add to database
             testModel.create(linkData);
+            console.log(linkData);
             return linkData;
           }
           socket.to(message.socket).emit('qr', recreate());

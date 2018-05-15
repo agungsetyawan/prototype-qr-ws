@@ -15,7 +15,7 @@ var timeFormat = process.env.TIME_FORMAT;
 router.get('/:id', function(req, res) {
   var uniqid = req.params.id;
   var time = moment().format(timeFormat);
-  var conditions = {
+  var query = {
     uniqid: uniqid,
     opened: false
   };
@@ -27,7 +27,7 @@ router.get('/:id', function(req, res) {
     new: true
   };
 
-  testModel.findOneAndUpdate(conditions, update, overwrite, function(err, data) {
+  testModel.findOneAndUpdate(query, update, overwrite, function(err, data) {
     if (err) {
       return res.status(500).send(err);
     } else {
