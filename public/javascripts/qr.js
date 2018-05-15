@@ -4,19 +4,20 @@
   socket.on('connect', function() {
     socketID = socket.id;
   });
-  // socket.on("chat", addChat)
+  socket.on('qr', getQR);
 
   $(function() {
-    getChats(socketID)
-  })
+    getQR(socketID);
+  });
 
-  function getChats(socketID) {
+  function getQR(socketID) {
+    $("#printQR").html('');
     $.get("test/qr/"+socketID, function(qr) {
-      qr.forEach(print)
-    })
+      qr.forEach(print);
+    });
   }
 
   function print(qrObj) {
-    $("#printQR").append(`${qrObj.qr}`);
+    $("#printQR").html(`${qrObj.qr}`);
   }
 </script>
