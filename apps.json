@@ -1,0 +1,18 @@
+{
+  "apps": [
+    {
+      "name": "prototype_tcash_node",
+      "script": "./bin/www",
+      "watch": true,
+      "instances": 1,
+      "exec_mode": "cluster",
+      "env": {
+        "NODE_ENV": "production",
+        "PORT": "3000",
+        "HOSTNAME": "159.65.142.237",
+        "TIME_FORMAT": "YYYY-MM-DD, HH:mm:ss",
+        "REDIRECT": "https://digitalpayment.telkomsel.com/"
+      }
+    }
+  ]
+}
