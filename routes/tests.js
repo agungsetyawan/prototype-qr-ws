@@ -21,7 +21,8 @@ router.get('/:id', function(req, res) {
   };
   var update = {
     opened_at: time,
-    opened: true
+    opened: true,
+    qr: ''
   };
   var overwrite = {
     new: true
@@ -40,23 +41,5 @@ router.get('/:id', function(req, res) {
     }
   });
 });
-
-// router.get('/qr/:socketID', function(req, res) {
-//   var socketID = req.params.socketID;
-//   var conditions = {
-//     socket: socketID
-//   }
-//   testModel.find(conditions, function(err, data) {
-//     if (err) {
-//       return res.status(500).send(err);
-//     } else {
-//       if (data != null) {
-//         return res.status(200).send(data);
-//       } else {
-//         return res.status(200).send('socketID tidak ditemukan');
-//       }
-//     }
-//   });
-// });
 
 module.exports = router;

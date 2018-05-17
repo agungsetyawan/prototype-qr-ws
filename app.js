@@ -117,7 +117,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('qr', function(data) {
-    console.log('/socket:', 'received from', socket.id, 'api', data);
+    console.log('/socket api:', 'received from', socket.id);
     var query = {
       uniqid: data.uniqid,
       socket: data.socket,
@@ -147,7 +147,6 @@ io.on('connection', function(socket) {
             }
             // add to database
             testModel.create(linkData);
-            console.log(linkData);
             return linkData;
           }
           socket.to(message.socket).emit('qr', recreate());
