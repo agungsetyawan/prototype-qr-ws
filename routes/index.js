@@ -3,8 +3,8 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('qr', {
-    title: 'Express'
+  res.render('index', {
+    title: 'Prototype Tcash Node'
   });
 });
 

@@ -1,7 +1,6 @@
 <script>
   var socket = io.connect();
   var socketID;
-  var data = {};
   var firstInit = true;
   socket.on('connect', function() {
     socketID = socket.id;
@@ -12,7 +11,8 @@
       print(message);
       firstInit = false;
     } else {
-      $('#printQR').html('<center>Terima Kasih<center>');
+      $('h1.display-4.text-center').html('Terima Kasih');
+      $('#printQR').addClass('d-none');
       var a = setInterval(function() {
         print(message);
         clearInterval(a);
@@ -20,14 +20,9 @@
     }
   });
 
-  // function getQR(socketID) {
-  //   $("#printQR").html('');
-  //   $.get("test/qr/" + socketID, function(qr) {
-  //     qr.forEach(print);
-  //   });
-  // }
-
   function print(qrObj) {
+    $('h1.display-4.text-center').html('Scan QR');
+    $("#printQR").removeClass('d-none');
     $("#printQR").html(`${qrObj.qr}`);
   }
 </script>

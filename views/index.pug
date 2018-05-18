@@ -2,15 +2,12 @@ extends layout
 
 block content
   .container
-    br
     .jumbotron
-      h1.dispaly-4 Start Chatting
-      br
-      input#txtName.form-control(placeholder="Name" type="text")
-      br
-      textarea#txtMessage.form-control(placeholder="Message")
-      br
-      button#send.btn.btn-success Send
-    #messages
+      .row
+        .col-4.offset-4
+          h1.display-4.text-center Scan QR
+      .row
+        .col-4.offset-4
+          #printQR
 
-  include ../public/javascripts/script.js
+  include ../public/javascripts/qr.js

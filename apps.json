@@ -10,8 +10,8 @@
         "NODE_ENV": "production",
         "PORT": "3000",
         "HOSTNAME": "159.65.142.237",
-        "TIME_FORMAT": "YYYY-MM-DD, HH:mm:ss",
-        "REDIRECT": "https://digitalpayment.telkomsel.com/"
+        "REDIRECT": "https://digitalpayment.telkomsel.com/",
+        "DB": "mongodb://localhost:27017/mylearning"
       }
     }
   ]
