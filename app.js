@@ -78,33 +78,45 @@ mongoose.connect(connectionDB, function() {
   }
 });
 
+var dateFormat = 'YYMMDD-HHmmss';
+var connectCounter = 0;
 // socket.io
 io.on('connection', function(socket) {
-  console.log('+socket:', socket.id, 'connected');
-  function create() {
-    // uniqid
-    var uniqueID = uniqid();
-    var time = moment().format(timeFormat);
-    var link = 'http://' + hostname + ':3000/test/' + uniqueID;
-    var svg_string = qr.imageSync(link, {
-      type: 'svg'
-    });
-    var linkData = {
-      uniqid: uniqueID,
-      socket: socket.id,
-      created_at: time,
-      opened_at: '',
-      opened: false,
-      qr: svg_string
-    }
-    // add to database
-    testModel.create(linkData);
-    return linkData;
+  connectCounter++;
+  var date = moment().format(dateFormat);
+  if (connectCounter <= 1) {
+    console.log(date, '+socket for API:', socket.id);
+  } else {
+    console.log(date, '+socket:', socket.id);
   }
-  create();
+
+  function create() {
+    if (connectCounter > 1) {
+      // uniqid
+      var uniqueID = uniqid();
+      var time = moment().format(timeFormat);
+      var link = 'http://' + hostname + ':3000/test/' + uniqueID;
+      var svg_string = qr.imageSync(link, {
+        type: 'svg'
+      });
+      var linkData = {
+        uniqid: uniqueID,
+        socket: socket.id,
+        created_at: time,
+        opened_at: '',
+        opened: false,
+        qr: svg_string
+      }
+      // add to database
+      testModel.create(linkData);
+      return linkData;
+    }
+  }
 
   socket.on('disconnect', function() {
-    console.log('-socket:', socket.id, 'disconnected');
+    var date = moment().format(dateFormat);
+    console.log(date, '-socket:', socket.id);
+    connectCounter--;
     var query = {
       socket: socket.id,
       opened: false
@@ -117,7 +129,8 @@ io.on('connection', function(socket) {
   });
 
   socket.on('qr', function(data) {
-    console.log('/socket api:', 'received from', socket.id);
+    var date = moment().format(dateFormat);
+    console.log(date, '/socket:', 'received from', socket.id);
     var query = {
       uniqid: data.uniqid,
       socket: data.socket,
@@ -129,6 +142,7 @@ io.on('connection', function(socket) {
       } else {
         if (data != null) {
           var message = data[0];
+
           function recreate() {
             // uniqid
             var uniqueID = uniqid();
