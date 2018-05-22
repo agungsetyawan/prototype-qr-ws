@@ -6,10 +6,15 @@ var logger = require('morgan');
 var mongoose = require('mongoose');
 var socket = require('socket.io');
 var uniqid = require('uniqid');
-var moment = require('moment');
 var qr = require('qr-image');
-moment.locale('id');
 require('dotenv').config();
+require('console-stamp')(console, {
+  pattern: 'yy-mm-dd HH:MM:ss.l',
+  colors: {
+    stamp: 'yellow',
+    label: 'green'
+  }
+});
 
 // routes
 var indexRouter = require('./routes/index');
@@ -65,15 +70,14 @@ module.exports = {
 var hostname = process.env.HOSTNAME;
 var port = process.env.PORT;
 var connectionDB = process.env.DB;
-var dateFormat = '|YYMMDD.HHmmss|';
 var connectCounter = 0;
 
 mongoose.Promise = Promise;
 mongoose.connect(connectionDB, function() {
   try {
-    console.log('database connection', connectionDB);
+    console.log('connected to database:', connectionDB);
   } catch (error) {
-    console.log('Error' + error);
+    console.log('Error mongodb:', error);
   }
 });
 
@@ -81,9 +85,15 @@ mongoose.connect(connectionDB, function() {
 io.on('connection', function(socket) {
   connectCounter++;
   if (connectCounter <= 1) {
-    console.log(moment().format(dateFormat), '+socket for API:', socket.id);
+    qrModel.remove({
+      opened: false
+    }, function(err) {
+      if (err) return console.log('Error mongodb:', err.message);
+    });
+    console.log('+socket for API:', socket.id);
   } else {
-    console.log(moment().format(dateFormat), '+socket:', socket.id);
+    console.log('+socket:', socket.id);
+    console.log('client connect:', connectCounter - 1);
   }
 
   function create() {
@@ -108,20 +118,21 @@ io.on('connection', function(socket) {
 
   socket.on('disconnect', function() {
     connectCounter--;
-    console.log(moment().format(dateFormat), '-socket:', socket.id);
+    console.log('-socket:', socket.id);
+    console.log('client connect:', connectCounter - 1);
     var query = {
       socket: socket.id,
       opened: false
     };
     //remove from database
     qrModel.remove(query, function(err) {
-      if (err) return handleError(err);
+      if (err) return console.log('Error mongodb:', err.message);
       // removed!
     });
   });
 
   socket.on('qr', function(data) {
-    console.log(moment().format(dateFormat), '/socket:', 'received from', socket.id);
+    console.log('/socket:', 'received from', socket.id);
     var query = {
       uniqid: data.uniqid,
       socket: data.socket,
@@ -129,7 +140,7 @@ io.on('connection', function(socket) {
     }
     qrModel.find(query, function(err, data) {
       if (err) {
-        return handleError(err);
+        return console.log('Error mongodb:', err.message);
       } else {
         if (data != null) {
           var message = data[0];

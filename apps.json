@@ -11,7 +11,7 @@
         "PORT": "3000",
         "HOSTNAME": "159.65.142.237",
         "REDIRECT": "https://digitalpayment.telkomsel.com/",
-        "DB": "mongodb://localhost:27017/mylearning"
+        "DB": "mongodb+srv://tcash:tcash@prototype-r1nvh.mongodb.net/tcash"
       }
     }
   ]
