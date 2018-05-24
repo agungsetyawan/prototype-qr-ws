@@ -70,7 +70,7 @@ module.exports = {
 var port = process.env.PORT;
 var connectCounter = 0;
 
-mongoose.Promise = Promise;
+// mongoose.Promise = Promise;
 mongoose.connect(process.env.DB, function() {
   try {
     console.log('connected to database:', process.env.DB);
@@ -98,15 +98,10 @@ io.on('connection', function(socket) {
     if (connectCounter > 1) {
       // uniqid
       var uniqueID = uniqid();
-      var link = process.env.HOST + ':' + process.env.PORT + '/qr/' + uniqueID;
-      var svg_string = qr.imageSync(link, {
-        type: 'svg'
-      });
       var linkData = {
         uniqid: uniqueID,
         socket: socket.id,
-        opened: false,
-        qr: svg_string
+        opened: false
       }
       // add to database
       qrModel.create(linkData);
@@ -146,15 +141,10 @@ io.on('connection', function(socket) {
           function recreate() {
             // uniqid
             var uniqueID = uniqid();
-            var link = process.env.HOST + ':' + process.env.PORT + '/qr/' + uniqueID;
-            var svg_string = qr.imageSync(link, {
-              type: 'svg'
-            });
             var linkData = {
               uniqid: uniqueID,
               socket: message.socket,
-              opened: false,
-              qr: svg_string
+              opened: false
             }
             // add to database
             qrModel.create(linkData);
