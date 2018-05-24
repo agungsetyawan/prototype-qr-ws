@@ -1,9 +1,9 @@
 {
-  "name": "test-socketio-mongo",
+  "name": "prototype_tcash_node",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "console-stamp": "^0.2.6",

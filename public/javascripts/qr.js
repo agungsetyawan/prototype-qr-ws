@@ -20,10 +20,17 @@
     }
   });
 
-  function print(qrObj) {
+  // var host = 'https://prototypez.herokuapp.com';
+  var host = 'http://192.168.100.18:3000';
+
+  function print(data) {
     $('h1.display-4.text-center').html('Scan QR');
     $("#printQR").removeClass('d-none');
-    $("#printQR").html(`${qrObj.qr}`);
+    var link = host + '/qr/' + data.uniqid;
+    $('#printQR').qrcode({
+      render: "svg",
+      text: link
+    });
   }
 
   if (navigator.geolocation) {

@@ -67,15 +67,13 @@ module.exports = {
 // =============================================================================
 
 // init
-var hostname = process.env.HOSTNAME;
 var port = process.env.PORT;
-var connectionDB = process.env.DB;
 var connectCounter = 0;
 
 mongoose.Promise = Promise;
-mongoose.connect(connectionDB, function() {
+mongoose.connect(process.env.DB, function() {
   try {
-    console.log('connected to database:', connectionDB);
+    console.log('connected to database:', process.env.DB);
   } catch (error) {
     console.log('Error mongodb:', error);
   }
@@ -100,7 +98,7 @@ io.on('connection', function(socket) {
     if (connectCounter > 1) {
       // uniqid
       var uniqueID = uniqid();
-      var link = 'http://' + hostname + ':' + port + '/qr/' + uniqueID;
+      var link = process.env.HOST + ':' + process.env.PORT + '/qr/' + uniqueID;
       var svg_string = qr.imageSync(link, {
         type: 'svg'
       });
@@ -148,7 +146,7 @@ io.on('connection', function(socket) {
           function recreate() {
             // uniqid
             var uniqueID = uniqid();
-            var link = 'http://' + hostname + ':' + port + '/qr/' + uniqueID;
+            var link = process.env.HOST + ':' + process.env.PORT + '/qr/' + uniqueID;
             var svg_string = qr.imageSync(link, {
               type: 'svg'
             });

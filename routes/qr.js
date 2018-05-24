@@ -6,9 +6,6 @@ require('dotenv').config();
 
 var testModel = require('../models/qr_model');
 
-// init
-var redirect = process.env.REDIRECT;
-
 router.get('/:id', function(req, res) {
   var uniqid = req.params.id;
   var query = {
@@ -29,7 +26,7 @@ router.get('/:id', function(req, res) {
     } else {
       if (data != null) {
         socket.emit('qr', data);
-        return res.status(200).redirect(redirect);
+        return res.status(200).redirect(process.env.REDIRECT);
       } else {
         return res.status(200).send('ID tidak ditemukan atau sudah dibuka');
       }

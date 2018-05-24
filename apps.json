@@ -9,7 +9,7 @@
       "env": {
         "NODE_ENV": "production",
         "PORT": "3000",
-        "HOSTNAME": "159.65.142.237",
+        "HOST": "http://159.65.142.237",
         "REDIRECT": "https://digitalpayment.telkomsel.com/",
         "DB": "mongodb+srv://tcash:tcash@prototype-r1nvh.mongodb.net/tcash"
       }
