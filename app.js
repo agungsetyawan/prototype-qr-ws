@@ -67,10 +67,9 @@ module.exports = {
 // =============================================================================
 
 // init
-var port = process.env.PORT;
 var connectCounter = 0;
 
-// mongoose.Promise = Promise;
+mongoose.Promise = Promise;
 mongoose.connect(process.env.DB, function() {
   try {
     console.log('connected to database:', process.env.DB);
@@ -96,16 +95,17 @@ io.on('connection', function(socket) {
 
   function create() {
     if (connectCounter > 1) {
-      // uniqid
-      var uniqueID = uniqid();
-      var linkData = {
-        uniqid: uniqueID,
+      var data = {
+        uniqid: uniqid(),
         socket: socket.id,
+        location: {
+          lat: 0,
+          long: 0
+        },
         opened: false
       }
-      // add to database
-      qrModel.create(linkData);
-      return linkData;
+      qrModel.create(data);
+      return data;
     }
   }
 
@@ -117,10 +117,8 @@ io.on('connection', function(socket) {
       socket: socket.id,
       opened: false
     };
-    //remove from database
     qrModel.remove(query, function(err) {
       if (err) return console.log('Error mongodb:', err.message);
-      // removed!
     });
   });
 
@@ -139,16 +137,17 @@ io.on('connection', function(socket) {
           var message = data[0];
 
           function recreate() {
-            // uniqid
-            var uniqueID = uniqid();
-            var linkData = {
-              uniqid: uniqueID,
+            var data = {
+              uniqid: uniqid(),
               socket: message.socket,
+              location: {
+                lat: 0,
+                long: 0
+              },
               opened: false
             }
-            // add to database
-            qrModel.create(linkData);
-            return linkData;
+            qrModel.create(data);
+            return data;
           }
           socket.to(message.socket).emit('qr', recreate());
         }

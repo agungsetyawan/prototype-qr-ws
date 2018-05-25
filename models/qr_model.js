@@ -1,10 +1,13 @@
 var mongoose = require('mongoose');
 
-var QRSchema = new mongoose.Schema({
+var schema = new mongoose.Schema({
   uniqid: String,
   socket: String,
-  opened: Boolean,
-  qr: String
+  location: {
+    lat: Number,
+    long: Number
+  },
+  opened: Boolean
 }, {
   timestamps: {
     createdAt: 'created_at',
@@ -12,4 +15,4 @@ var QRSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('qr', QRSchema);
+module.exports = mongoose.model('qr', schema);

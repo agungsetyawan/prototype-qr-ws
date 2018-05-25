@@ -11,13 +11,17 @@ require('dotenv').config();
 
 var testModel = require('../models/qr_model');
 
-router.get('/:id', function(req, res) {
+router.get('/:id?lat=:lat&long=:long', function(req, res) {
   var uniqid = req.params.id;
   var query = {
     uniqid: uniqid,
     opened: false
   };
   var update = {
+    location: {
+      lat: req.params.lat,
+      long: req.params.long
+    },
     opened: true
   };
   var overwrite = {
