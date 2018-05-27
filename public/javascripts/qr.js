@@ -20,8 +20,9 @@
     }
   });
 
-  var host = 'https://prototypez.herokuapp.com';
-  // var host = 'http://192.168.100.18:3000';
+  // var host = 'https://prototypez.herokuapp.com'; // herokuapp
+  // var host = 'http://192.168.100.18:3000'; // mirum bandung
+  var host = 'http://192.168.43.19:3000'; // redmi 4x
 
   function print(data) {
     $('h1.display-4.text-center').html('Scan QR');

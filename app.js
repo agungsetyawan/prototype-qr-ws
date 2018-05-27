@@ -69,7 +69,6 @@ module.exports = {
 // init
 var connectCounter = 0;
 
-mongoose.Promise = Promise;
 mongoose.connect(process.env.DB, function() {
   try {
     console.log('connected to database:', process.env.DB);
