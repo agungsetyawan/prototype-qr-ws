@@ -96,12 +96,7 @@ io.on('connection', function(socket) {
     if (connectCounter > 1) {
       var data = {
         uniqid: uniqid(),
-        socket: socket.id,
-        location: {
-          lat: 0,
-          long: 0
-        },
-        opened: false
+        socket: socket.id
       }
       qrModel.create(data);
       return data;
@@ -138,12 +133,7 @@ io.on('connection', function(socket) {
           function recreate() {
             var data = {
               uniqid: uniqid(),
-              socket: message.socket,
-              location: {
-                lat: 0,
-                long: 0
-              },
-              opened: false
+              socket: message.socket
             }
             qrModel.create(data);
             return data;
