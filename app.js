@@ -7,7 +7,14 @@ var mongoose = require('mongoose');
 var socket = require('socket.io');
 var uniqid = require('uniqid');
 var qr = require('qr-image');
-require('dotenv').config();
+var dotenv = require('dotenv');
+var result = dotenv.config();
+
+if (result.error) {
+  throw result.error;
+}
+console.log(result.parsed);
+
 require('console-stamp')(console, {
   pattern: 'yy-mm-dd HH:MM:ss.l',
   colors: {

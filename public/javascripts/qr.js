@@ -24,8 +24,7 @@
     }
   });
 
-  var host = 'https://prototypez.herokuapp.com'; // herokuapp
-  // var host = 'http://192.168.100.18:3000'; // mirum bandung
+  var host = window.location.href == 'https://protype.space' ? 'https://protype.space' : 'https://prototypez.herokuapp.com';
 
   function print(data) {
     $('h1.display-4.text-center').html('Scan QR');
@@ -50,6 +49,7 @@
       timeout: 500000,
       maximumAge: 0
     };
+
     function success(pos) {
       var crd = pos.coords;
       console.log(crd);
@@ -57,6 +57,7 @@
       geometry.long = crd.longitude;
       navigator.geolocation.clearWatch(id);
     }
+
     function error(err) {
       console.warn('ERROR(' + err.code + '): ' + err.message);
     }
