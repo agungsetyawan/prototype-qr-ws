@@ -24,7 +24,7 @@
     }
   });
 
-  var host = window.location.href == 'https://protype.space' ? 'https://protype.space' : 'https://prototypez.herokuapp.com';
+  var host = window.location.href == 'https://prototypez.herokuapp.com' ? 'https://prototypez.herokuapp.com' : 'https://protype.space';
 
   function print(data) {
     $('h1.display-4.text-center').html('Scan QR');
